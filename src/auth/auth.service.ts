@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload';
 import { LoginResponse } from './interfaces/login-response';
 import { LoginDto, RegisterUserDto, CreateUserDto, UpdateAuthDto } from './dto';
-import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -94,12 +93,17 @@ export class AuthService {
   };
 
   findAll(): Promise<User[]> {
-    return this.userModel.find();
-  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+    return this.userModel.find();
+  };
+
+  async findUserById( id: string ) {
+
+    const resp = await this.userModel.findById( id );
+    const { password, ...user } = resp.toJSON();
+
+    return user;
+  };
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
     return `This action updates a #${id} auth`;
